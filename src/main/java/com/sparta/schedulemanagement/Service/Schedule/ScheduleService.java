@@ -3,6 +3,7 @@ package com.sparta.schedulemanagement.Service.Schedule;
 import com.sparta.schedulemanagement.Dto.Schedule.SchedulePageResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
+import com.sparta.schedulemanagement.Dto.User.Login.LoginRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

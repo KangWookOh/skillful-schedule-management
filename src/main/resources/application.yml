@@ -28,3 +28,6 @@ server:
 weather:
   api:
     url: https://f-api.github.io/f-api/weather.json
+logging:
+  level:
+    web: debug

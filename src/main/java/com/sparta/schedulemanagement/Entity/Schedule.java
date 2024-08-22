@@ -4,7 +4,6 @@ import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class Schedule extends BaseTime{
         if (reply.getSchedule() != this) {
             reply = Reply.builder()
                     .comment(reply.getComment())
-                    .userName(reply.getUserName())
+                    .userName(reply.getOwner().getUserName())
                     .schedule(this)
                     .build();
         }

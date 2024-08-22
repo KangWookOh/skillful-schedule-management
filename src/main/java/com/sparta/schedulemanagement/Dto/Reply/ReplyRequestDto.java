@@ -1,17 +1,17 @@
 package com.sparta.schedulemanagement.Dto.Reply;
 
-import com.sparta.schedulemanagement.Entity.Schedule;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class ReplyRequestDto {
     private String comment;
-    private String userName;
+    private Long ownerId;
 
     @Builder
-    public ReplyRequestDto(String comment, String userName) {
+    public ReplyRequestDto(String comment, Long ownerId) {
         this.comment = comment;
-        this.userName = userName;
+        this.ownerId = ownerId;
+
     }
 }

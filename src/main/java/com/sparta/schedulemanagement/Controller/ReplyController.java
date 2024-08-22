@@ -4,6 +4,7 @@ import com.sparta.schedulemanagement.Dto.Reply.ReplyRequestDto;
 import com.sparta.schedulemanagement.Dto.Reply.ReplyResponseDto;
 import com.sparta.schedulemanagement.Service.Reply.ReplyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/schedules/{sid}/replies")
 @RequiredArgsConstructor
+@Slf4j
 public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping
-    public ResponseEntity<ReplyResponseDto> createReply(@PathVariable Long sid , @RequestBody ReplyRequestDto replyRequestDto){
-        ReplyResponseDto createReply = replyService.addReply(sid, replyRequestDto);
+    public ResponseEntity<ReplyResponseDto> createReply(@PathVariable Long sid, @RequestBody ReplyRequestDto replyRequestDto){
+        ReplyResponseDto createReply = replyService.addReply(sid,replyRequestDto);
+        log.info("sid:"+sid);
+        log.info("create reply: {}",replyRequestDto);
         return ResponseEntity.status(201).body(createReply);
     }
     @GetMapping("/{rid}")

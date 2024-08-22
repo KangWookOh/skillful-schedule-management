@@ -2,11 +2,12 @@ package com.sparta.schedulemanagement.Service.Reply;
 
 import com.sparta.schedulemanagement.Dto.Reply.ReplyRequestDto;
 import com.sparta.schedulemanagement.Dto.Reply.ReplyResponseDto;
-import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
 import com.sparta.schedulemanagement.Entity.Reply;
 import com.sparta.schedulemanagement.Entity.Schedule;
+import com.sparta.schedulemanagement.Entity.User;
 import com.sparta.schedulemanagement.Repository.ReplyRepository;
 import com.sparta.schedulemanagement.Repository.ScheduleRepository;
+import com.sparta.schedulemanagement.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +21,16 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService{
     private final ReplyRepository replyRepository;
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public ReplyResponseDto addReply(Long sid, ReplyRequestDto replyRequestDto) {
         Schedule schedule = scheduleRepository.findById(sid).orElseThrow(()-> new IllegalArgumentException("일정이 없습니다"));
+        User owner = userRepository.findById(replyRequestDto.getOwnerId()).orElseThrow(()->new IllegalArgumentException("유저가 존재하지 않습니다. "));
         Reply reply = Reply.builder()
                 .comment(replyRequestDto.getComment())
-                .userName(replyRequestDto.getUserName())
+                .owner(owner)
                 .schedule(schedule)
                 .build();
         schedule.addReply(reply);

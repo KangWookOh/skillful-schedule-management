@@ -1,8 +1,11 @@
 package com.sparta.schedulemanagement.Service.Schedule;
 
+import com.sparta.schedulemanagement.Config.Util.JwtUtil;
+import com.sparta.schedulemanagement.Config.Util.PasswordUtil;
 import com.sparta.schedulemanagement.Dto.Schedule.SchedulePageResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
+import com.sparta.schedulemanagement.Dto.User.Login.LoginRequestDto;
 import com.sparta.schedulemanagement.Entity.Schedule;
 import com.sparta.schedulemanagement.Entity.User;
 import com.sparta.schedulemanagement.Repository.ScheduleRepository;
@@ -23,6 +26,8 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final PasswordUtil passwordUtil;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     @Override
@@ -42,6 +47,8 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
         return ScheduleResponseDto.from(scheduleRepository.save(schedule));
     }
+
+
 
     @Override
     @Transactional(readOnly = true)

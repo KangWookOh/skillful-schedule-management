@@ -41,11 +41,11 @@ public class JwtUtil {
 
 
     // JWT 토큰 생성
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(username)
-                .claim(AUTHORIZATION_KEY, username)
+                .setSubject(email)
+                .claim(AUTHORIZATION_KEY, email)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(SignatureAlgorithm.HS256, getSecretKey())
@@ -53,7 +53,7 @@ public class JwtUtil {
     }
 
     // 토큰에서 사용자 이름 추출
-    public String getUsernameFromToken(String token) {
+    public String getUserEmailFromToken(String token) {
         return parseClaims(token).getSubject();
     }
 

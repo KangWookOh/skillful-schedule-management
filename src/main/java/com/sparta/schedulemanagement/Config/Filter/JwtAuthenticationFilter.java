@@ -3,6 +3,7 @@ package com.sparta.schedulemanagement.Config.Filter;
 import com.sparta.schedulemanagement.Config.Util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

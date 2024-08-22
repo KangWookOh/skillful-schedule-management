@@ -25,3 +25,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+weather:
+  api:
+    url: https://f-api.github.io/f-api/weather.json

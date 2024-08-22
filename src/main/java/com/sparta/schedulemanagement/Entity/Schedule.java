@@ -20,6 +20,8 @@ public class Schedule extends BaseTime{
 
     private String contents;
 
+    private String weather;
+
     //orphanRemoval 자식엔티티의 변경이 있다면  기존 고아 삭제
     @OneToMany(mappedBy = "schedule",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
@@ -41,9 +43,10 @@ public class Schedule extends BaseTime{
     }
 
     @Builder
-    public Schedule(String title, String contents, User owner) {
+    public Schedule(String title, String contents,String weather, User owner) {
         this.title = title;
         this.contents = contents;
+        this.weather = weather;
         this.owner = owner;
         owner.addOwnedSchedule(this);
     }

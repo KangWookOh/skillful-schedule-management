@@ -1,5 +1,6 @@
 package com.sparta.schedulemanagement.Controller;
 
+import com.sparta.schedulemanagement.Config.Util.JwtUtil;
 import com.sparta.schedulemanagement.Dto.Schedule.SchedulePageResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,10 @@ import java.util.Optional;
 public class ScheduleController {
 
     private final ScheduleServiceImpl scheduleService;
+    private final JwtUtil jwtUtil;
 
-   @PostMapping("/register")
+
+    @PostMapping(value="/register", produces="application/json")
    public ResponseEntity<ScheduleResponseDto> register(@RequestBody ScheduleRequestDto scheduleRequestDto) {
        return ResponseEntity.ok(scheduleService.createSchedule(scheduleRequestDto));
    }

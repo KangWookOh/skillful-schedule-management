@@ -7,6 +7,7 @@ import com.sparta.schedulemanagement.Dto.User.UserRequestDto;
 import com.sparta.schedulemanagement.Dto.User.UserResponseDto;
 import com.sparta.schedulemanagement.Dto.User.UserTokenResponseDto;
 import com.sparta.schedulemanagement.Entity.User;
+import com.sparta.schedulemanagement.Entity.UserRole;
 import com.sparta.schedulemanagement.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService{
         if(!PasswordUtil.checkPassword(loginRequestDto.getPassword(), user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return jwtUtil.generateToken(user.getUserName());
+        return jwtUtil.generateToken(user.getEmail(),user.getRole());
     }
 
 
@@ -46,9 +47,10 @@ public class UserServiceImpl implements UserService{
                 .userName(userRequestDto.getUserName())
                 .email(userRequestDto.getEmail())
                 .password(password)
+                .role(UserRole.USER)
                 .build();
         userRepository.save(user);
-        String token = jwtUtil.generateToken(user.getUserName());
+        String token = jwtUtil.generateToken(user.getUserName(), user.getRole());
         return UserTokenResponseDto.from(user,token);
     }
 
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService{
         if (!PasswordUtil.checkPassword(loginRequestDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getEmail(),user.getRole());
     }
 
     @Override

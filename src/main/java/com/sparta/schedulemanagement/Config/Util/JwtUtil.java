@@ -1,5 +1,6 @@
 package com.sparta.schedulemanagement.Config.Util;
 
+import com.sparta.schedulemanagement.Entity.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,11 +42,11 @@ public class JwtUtil {
 
 
     // JWT 토큰 생성
-    public String generateToken(String email) {
+    public String generateToken(String email,UserRole role) {
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(email)
-                .claim(AUTHORIZATION_KEY, email)
+                .claim(AUTHORIZATION_KEY, role.name())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(SignatureAlgorithm.HS256, getSecretKey())
@@ -57,8 +58,8 @@ public class JwtUtil {
         return parseClaims(token).getSubject();
     }
 
-    public String getAuthFromToken(String token) {
-        return parseClaims(token).get(AUTHORIZATION_KEY, String.class);
+    public UserRole getRoleFromToken(String token) {
+        return UserRole.valueOf(parseClaims(token).get(AUTHORIZATION_KEY,String.class));
     }
 
     public boolean validateToken(String token) {

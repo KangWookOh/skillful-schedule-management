@@ -26,6 +26,8 @@ public class ScheduleResponseDto {
 
     private String email;
 
+    private String weather;
+
     private String createDate;
 
     private String updateDate;
@@ -40,6 +42,7 @@ public class ScheduleResponseDto {
         schedule.getOwner().getUid(),
         schedule.getOwner().getUserName(),
         schedule.getOwner().getEmail(),
+        schedule.getWeather(),
         schedule.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분")),
         schedule.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분")),
                 schedule.getAssignees().stream()

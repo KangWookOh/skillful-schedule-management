@@ -4,6 +4,7 @@ import com.sparta.schedulemanagement.Config.Util.JwtUtil;
 import com.sparta.schedulemanagement.Dto.Schedule.SchedulePageResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
+import com.sparta.schedulemanagement.Entity.Schedule;
 import com.sparta.schedulemanagement.Service.Schedule.ScheduleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,13 @@ import java.util.Optional;
 public class ScheduleController {
 
     private final ScheduleServiceImpl scheduleService;
-    private final JwtUtil jwtUtil;
 
 
     @PostMapping(value="/register", produces="application/json")
    public ResponseEntity<ScheduleResponseDto> register(@RequestBody ScheduleRequestDto scheduleRequestDto) {
-       return ResponseEntity.ok(scheduleService.createSchedule(scheduleRequestDto));
-   }
+        ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(scheduleRequestDto);
+       return ResponseEntity.ok().body(scheduleResponseDto);
+    }
 
     @GetMapping("/{sid}")
     public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long sid){

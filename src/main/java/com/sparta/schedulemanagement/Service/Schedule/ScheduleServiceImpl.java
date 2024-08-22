@@ -1,18 +1,15 @@
 package com.sparta.schedulemanagement.Service.Schedule;
 
-import com.sparta.schedulemanagement.Config.Util.JwtUtil;
-import com.sparta.schedulemanagement.Config.Util.PasswordUtil;
 import com.sparta.schedulemanagement.Dto.Schedule.SchedulePageResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.WeatherResponseDto;
-import com.sparta.schedulemanagement.Dto.User.Login.LoginRequestDto;
 import com.sparta.schedulemanagement.Entity.Schedule;
 import com.sparta.schedulemanagement.Entity.User;
-import com.sparta.schedulemanagement.Entity.UserRole;
 import com.sparta.schedulemanagement.Repository.ScheduleRepository;
 import com.sparta.schedulemanagement.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,13 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduleServiceImpl implements ScheduleService{
 
     private final ScheduleRepository scheduleRepository;
@@ -37,6 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Value("${weather.api.url}")
     private String weatherApiUrl;
+
 
     @Transactional
     @Override
@@ -65,7 +65,12 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Transactional(readOnly = true)
     public Optional<ScheduleResponseDto> getScheduleById(Long sid){
         Schedule schedule = scheduleRepository.findById(sid)
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다"));
+
+        if(schedule.getAssignees() == null || schedule.getAssignees().isEmpty()){
+            scheduleRepository.delete(schedule);
+            throw new NoSuchElementException("담당자가 비어있어 스케줄이 삭제 되었습니다.");
+        }
         return Optional.of(ScheduleResponseDto.from(schedule));
     }
 
@@ -112,13 +117,22 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Override
     public WeatherResponseDto getWeatherForToday() {
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd"));
-        String url = weatherApiUrl + "?date=" + today;
-        WeatherResponseDto response = restTemplate.getForObject(url, WeatherResponseDto.class);
-        if (response == null) {
-            throw new RuntimeException("날씨 정보를 가지고 오는데 실패 했습니다.");
+        WeatherResponseDto[] response = restTemplate.getForObject(weatherApiUrl, WeatherResponseDto[].class);
+        if(response == null || response.length == 0){
+            throw new RuntimeException("날씨 정보를 가져오는데 실패 했습니다.");
         }
-        return response;
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd"));
+
+        return Arrays.stream(response)
+                .filter(weather ->today.equals(weather.getDate()))
+                .findFirst()
+                .orElseGet(() -> {
+                    WeatherResponseDto weatherResponseDto = new WeatherResponseDto();
+                    weatherResponseDto.setDate(today);
+                    weatherResponseDto.setWeather("날씨 정보 없음");
+                    return weatherResponseDto;
+
+                });
 
     }
 

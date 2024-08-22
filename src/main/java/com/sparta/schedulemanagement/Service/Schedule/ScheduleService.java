@@ -19,6 +19,7 @@ public interface ScheduleService {
      Page<SchedulePageResponseDto> getAllSchedules(int page, int size);
 
      ScheduleResponseDto updateSchedule(Long sid,ScheduleRequestDto scheduleRequestDto);
+
      void deleteSchedule(Long sid);
 
      WeatherResponseDto getWeatherForToday();

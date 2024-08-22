@@ -27,10 +27,8 @@ public class Reply extends BaseTime{
     public Reply(String comment,String userName, Schedule schedule) {
         this.comment = comment;
         this.userName = userName;
-        if (schedule != null) {
-            this.schedule = schedule;
-            schedule.getReplies().add(this);
-        }
+        schedule.getReplies().add(this);
+
 
     }
 

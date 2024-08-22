@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
-    private final PasswordUtil passwordUtil;
     private final JwtUtil jwtUtil;
 
 

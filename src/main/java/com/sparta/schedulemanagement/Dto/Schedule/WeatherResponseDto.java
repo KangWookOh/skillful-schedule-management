@@ -9,7 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class WeatherResponseDto {
 
-
     @JsonProperty("date")
     private String date;
 
@@ -17,4 +16,7 @@ public class WeatherResponseDto {
     private String weather;
 
 
+    public WeatherResponseDto() {
+
+    }
 }

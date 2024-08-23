@@ -9,7 +9,6 @@ import com.sparta.schedulemanagement.Entity.User;
 import com.sparta.schedulemanagement.Repository.ScheduleRepository;
 import com.sparta.schedulemanagement.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,12 +24,13 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class ScheduleServiceImpl implements ScheduleService{
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
+
 
     @Value("${weather.api.url}")
     private String weatherApiUrl;
@@ -75,7 +75,6 @@ public class ScheduleServiceImpl implements ScheduleService{
      * @return 조회된 일정의 응답 DTO(Optional)
      */
     @Override
-    @Transactional(readOnly = true)
     public Optional<ScheduleResponseDto> getScheduleById(Long sid){
         Schedule schedule = scheduleRepository.findById(sid)
                 .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다"));
@@ -115,11 +114,11 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Transactional
     public ScheduleResponseDto updateSchedule(Long sid, ScheduleRequestDto scheduleRequestDto) {
         Schedule schedule = scheduleRepository.findById(sid)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("일정을 찾을 수 없습니다."));
 
         if (scheduleRequestDto.getOwnerId() != null) {
             User newOwner = userRepository.findById(scheduleRequestDto.getOwnerId())
-                    .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));
             schedule.updateOwner(newOwner);  // 메소드를 통해 업데이트
         }
         // 기존 담당자 제거
@@ -133,7 +132,7 @@ public class ScheduleServiceImpl implements ScheduleService{
             schedule.getAssignees().clear();
             for (Long assigneeId : scheduleRequestDto.getAssigneeIds()) {
                 User assignee = userRepository.findById(assigneeId)
-                        .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+                        .orElseThrow(() -> new NoSuchElementException("담당자를 찾을 수 없습니다."));
                 schedule.addAssignedUser(assignee);
             }
         }
@@ -146,9 +145,10 @@ public class ScheduleServiceImpl implements ScheduleService{
          * @param sid 일정 ID
          */
         @Override
+        @Transactional
         public void deleteSchedule (Long sid){
             Schedule schedule = scheduleRepository.findById(sid)
-                    .orElseThrow(() -> new IllegalArgumentException("일정을 찾을수 없습니다"));
+                    .orElseThrow(() -> new NoSuchElementException("일정을 찾을수 없습니다"));
             scheduleRepository.delete(schedule);
         }
 
@@ -162,7 +162,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         public WeatherResponseDto getWeatherForToday () {
             WeatherResponseDto[] response = restTemplate.getForObject(weatherApiUrl, WeatherResponseDto[].class);
             if (response == null || response.length == 0) {
-                throw new RuntimeException("날씨 정보를 가져오는데 실패 했습니다.");
+                throw new IllegalArgumentException("날씨 정보를 가져오는데 실패 했습니다.");
             }
             String today = LocalDate.now()
                     .format(DateTimeFormatter.ofPattern("MM-dd"));

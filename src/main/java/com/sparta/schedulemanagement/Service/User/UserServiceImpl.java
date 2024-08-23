@@ -14,11 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService{
      * @param userRequestDto 사용자 요청 DTO
      * @return 생성된 사용자와 JWT 토큰을 포함하는 응답 DTO
      */
+    @Transactional
     @Override
     public UserTokenResponseDto createUser(UserRequestDto userRequestDto) {
         if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent()){
@@ -53,6 +55,7 @@ public class UserServiceImpl implements UserService{
      * @param loginRequestDto 로그인 요청 DTO
      * @return 생성된 JWT 토큰
      */
+    @Transactional
     @Override
     public String loginUser(LoginRequestDto loginRequestDto) {
         User user =userRepository.findByEmail(loginRequestDto.getEmail())
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDto getUserById(Long uid) {
         User user = userRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다"));
         return UserResponseDto.from(user);
     }
 
@@ -96,9 +99,10 @@ public class UserServiceImpl implements UserService{
      * @return 업데이트된 사용자 응답 DTO
      */
     @Override
+    @Transactional
     public UserResponseDto updateUser(Long uid, UserRequestDto userRequestDto) {
         User user = userRepository.findById(uid)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다"));
         user.updateUser(userRequestDto);
         return UserResponseDto.from(userRepository.save(user));
     }
@@ -109,6 +113,7 @@ public class UserServiceImpl implements UserService{
      * @param uid 사용자 ID
      */
     @Override
+    @Transactional
     public void deleteUser(Long uid) {
         userRepository.findById(uid)
                 .orElseThrow(()->new IllegalArgumentException("유저를 찾을 수 없습니다."));

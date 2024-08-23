@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class ReplyServiceImpl implements ReplyService{
     @Transactional(readOnly = true)
     public Optional<ReplyResponseDto> getReplyById(Long rid) {
         Reply reply =replyRepository.findById(rid)
-                .orElseThrow(()->new IllegalArgumentException("댓글이 없습니다"));
+                .orElseThrow(()->new NoSuchElementException("댓글이 없습니다"));
         return Optional.of(ReplyResponseDto.from(reply));
     }
 
@@ -87,7 +88,7 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     public ReplyResponseDto updateReply(Long rid, ReplyRequestDto replyRequestDto) {
         Reply reply =replyRepository.findById(rid)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("댓글을 찾을수 없습니다"));
         reply.replyUpdate(replyRequestDto);
         return ReplyResponseDto.from(replyRepository.save(reply));
     }
@@ -100,7 +101,7 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     public void deleteReply(Long rid) {
         Reply reply = replyRepository.findById(rid)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("댓글을 찾을수 없습니다"));
         replyRepository.delete(reply);
     }
 }

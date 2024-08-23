@@ -55,7 +55,8 @@ public class JwtUtil {
 
     // 토큰에서 사용자 이름 추출
     public String getUserEmailFromToken(String token) {
-        return parseClaims(token).getSubject();
+        return parseClaims(token)
+                .getSubject();
     }
 
     public UserRole getRoleFromToken(String token) {

@@ -2,6 +2,8 @@ package com.sparta.schedulemanagement.Entity;
 
 import com.sparta.schedulemanagement.Dto.User.UserRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,8 @@ public class User extends BaseTime{
 
     private String userName;
 
+    @NotEmpty(message = "이메일 입력은 필수 입니다.")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
     private String email;
 
     private String password;

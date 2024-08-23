@@ -2,9 +2,7 @@ package com.sparta.schedulemanagement.Dto.Schedule;
 
 import com.sparta.schedulemanagement.Entity.Schedule;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

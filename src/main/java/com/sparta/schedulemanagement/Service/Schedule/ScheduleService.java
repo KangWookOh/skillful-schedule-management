@@ -5,6 +5,7 @@ import com.sparta.schedulemanagement.Dto.Schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.Dto.Schedule.ScheduleResponseDto;
 import com.sparta.schedulemanagement.Dto.Schedule.WeatherResponseDto;
 import com.sparta.schedulemanagement.Dto.User.Login.LoginRequestDto;
+import com.sparta.schedulemanagement.Entity.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

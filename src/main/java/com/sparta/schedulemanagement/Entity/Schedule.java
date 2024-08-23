@@ -33,13 +33,20 @@ public class Schedule extends BaseTime{
     private List<ScheduleAssignee> assignees = new ArrayList<>();
 
 
-    public void updateSchedule(ScheduleRequestDto scheduleRequestDto, User newOwner) {
+    public void updateSchedule(ScheduleRequestDto scheduleRequestDto) {
         this.title = scheduleRequestDto.getTitle();
         this.contents = scheduleRequestDto.getContents();
-        if (newOwner != null) {
-            this.owner = newOwner;
-        }
     }
+
+    // 소유자 업데이트 메소드
+    public void updateOwner(User newOwner) {
+        this.owner = newOwner;
+    }
+
+    public void updateAssignees(List<ScheduleAssignee> newAssignees) {
+        this.assignees = newAssignees;
+    }
+
 
     @Builder
     public Schedule(String title, String contents,String weather, User owner) {

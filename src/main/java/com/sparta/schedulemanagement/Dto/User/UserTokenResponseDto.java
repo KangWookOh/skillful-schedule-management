@@ -3,7 +3,6 @@ package com.sparta.schedulemanagement.Dto.User;
 import com.sparta.schedulemanagement.Entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.format.DateTimeFormatter;
 @Getter

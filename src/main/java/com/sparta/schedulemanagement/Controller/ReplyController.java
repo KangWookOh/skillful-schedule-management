@@ -18,23 +18,53 @@ import java.util.Optional;
 public class ReplyController {
     private final ReplyService replyService;
 
+    /**
+     * 새로운 댓글을 생성합니다.
+     *
+     * @param sid 댓글이 달릴 일정의 ID
+     * @param replyRequestDto 댓글 요청 DTO
+     * @return 조회된 댓글 응답 DTO를 포함한 HTTP 상태 코드 200 (OK)
+     */
     @PostMapping
     public ResponseEntity<ReplyResponseDto> createReply(@PathVariable Long sid, @RequestBody ReplyRequestDto replyRequestDto){
         ReplyResponseDto createReply = replyService.addReply(sid,replyRequestDto);
         log.info("sid:"+sid);
         log.info("create reply: {}",replyRequestDto);
-        return ResponseEntity.status(201).body(createReply);
+        return ResponseEntity.ok(createReply);
     }
+
+    /**
+     * ID로 특정 댓글을 조회합니다.
+     *
+     * @param rid 댓글의 ID
+     * @return 조회된 댓글 응답 DTO를 포함한 HTTP 상태 코드 200 (OK)
+     */
     @GetMapping("/{rid}")
     public ResponseEntity<Optional<ReplyResponseDto>> getReplyById(@PathVariable Long rid){
         Optional<ReplyResponseDto> reply = replyService.getReplyById(rid);
         return ResponseEntity.ok(reply);
     }
+
+    /**
+     * 일정 ID로 모든 댓글을 조회합니다.
+     *
+     * @param sid 일정의 ID
+     * @return 조회된 댓글 응답 DTO 목록을 포함한 HTTP 상태 코드 200 (OK)
+     */
     @GetMapping
     public ResponseEntity<List<ReplyResponseDto>> getAllReply(@PathVariable Long sid){
         List<ReplyResponseDto> replise = replyService.getRepliesByScheduleId(sid);
         return ResponseEntity.ok(replise);
     }
+
+    /**
+     * 특정 댓글을 업데이트합니다.
+     *
+     * @param sid 댓글이 달릴 일정의 ID
+     * @param rid 댓글의 ID
+     * @param replyRequestDto 업데이트할 댓글 요청 DTO
+     * @return 업데이트된 댓글 응답 DTO와 HTTP 상태 코드 200 (OK)
+     */
     @PutMapping("/{rid}")
     public ResponseEntity<ReplyResponseDto> updateReply(@PathVariable Long sid,
                                                         @PathVariable Long rid,
@@ -43,6 +73,13 @@ public class ReplyController {
         return ResponseEntity.ok(updateReply);
     }
 
+    /**
+     * 특정 댓글을 삭제합니다.
+     *
+     * @param rid 댓글의 ID
+     * @param sid 댓글이 달릴 일정의 ID
+     * @return HTTP 상태 코드 204 (No Content)
+     */
     @DeleteMapping("delete/{rid}")
     public ResponseEntity<Void> deleteReply(@PathVariable Long rid,@PathVariable Long sid){
         replyService.deleteReply(rid);

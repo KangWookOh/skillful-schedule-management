@@ -4,7 +4,6 @@ import com.sparta.schedulemanagement.Config.Util.JwtUtil;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Configuration
 public class FilterConfig {

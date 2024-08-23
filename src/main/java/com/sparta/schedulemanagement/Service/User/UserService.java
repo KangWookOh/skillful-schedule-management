@@ -18,7 +18,6 @@ public interface UserService {
 
     void deleteUser(Long uid);
 
-    String authenticateUser(LoginRequestDto loginRequestDto);
 
     String loginUser (LoginRequestDto loginRequestDto);
 

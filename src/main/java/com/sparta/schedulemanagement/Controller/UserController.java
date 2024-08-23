@@ -1,19 +1,14 @@
 package com.sparta.schedulemanagement.Controller;
 
-import com.sparta.schedulemanagement.Config.Util.JwtUtil;
 import com.sparta.schedulemanagement.Dto.User.Login.LoginRequestDto;
-import com.sparta.schedulemanagement.Dto.User.Login.LoginResponseDto;
 import com.sparta.schedulemanagement.Dto.User.UserRequestDto;
 import com.sparta.schedulemanagement.Dto.User.UserResponseDto;
 import com.sparta.schedulemanagement.Dto.User.UserTokenResponseDto;
-import com.sparta.schedulemanagement.Service.User.UserService;
 import com.sparta.schedulemanagement.Service.User.UserServiceImpl;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -21,28 +16,79 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final JwtUtil jwtUtil;
-
     private final UserServiceImpl userService;
+
+
+    /**
+     * 사용자 등록을 처리합니다.
+     *
+     * @param userRequestDto 사용자 등록 요청 데이터 전송 객체
+     * @return 등록된 사용자 정보와 JWT 토큰을 포함한 응답
+     */
 
     @PostMapping("/register")
     public ResponseEntity<UserTokenResponseDto> register(@RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(userService.createUser(userRequestDto));
     }
 
+    /**
+     * 사용자 로그인을 처리합니다.
+     *
+     * @param loginRequestDto 로그인 요청 데이터 전송 객체
+     * @return 인증된 사용자의 JWT 토큰
+     */
     @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody LoginRequestDto loginRequestDto){
         String token = userService.loginUser(loginRequestDto);
         return ResponseEntity.ok(token);
     }
 
+    /**
+     * 주어진 사용자 ID에 대한 사용자 정보를 조회합니다.
+     *
+     * @param uid 사용자 ID
+     * @return 조회된 사용자 정보
+     */
     @GetMapping("/{uid}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long uid) {
         return ResponseEntity.ok(userService.getUserById(uid));
     }
-    @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers(@PathVariable Long uid, @RequestBody UserRequestDto userRequestDto) {
-        return ResponseEntity.ok(Collections.singletonList(userService.updateUser(uid, userRequestDto)));
+
+    /**
+     * 모든 사용자 정보를 조회합니다.
+     *
+     * @return 모든 사용자 정보 목록
+     */
+    @GetMapping("/list")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        // 모든 사용자 정보를 조회하고, 응답으로 반환
+        List<UserResponseDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+
+    /**
+     * 사용자 정보를 업데이트합니다.
+     *
+     * @param uid 사용자 ID
+     * @param userRequestDto 사용자 업데이트 요청 데이터 전송 객체
+     * @return 업데이트된 사용자 정보
+     */
+    @PutMapping("/update/{uid}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long uid, @RequestBody UserRequestDto userRequestDto) {
+        return ResponseEntity.ok(userService.updateUser(uid, userRequestDto));
+    }
+
+    /**
+     * 사용자를 삭제합니다.
+     *
+     * @param uid 사용자 ID
+     * @return 요청이 성공적으로 처리되었음을 나타내는 응답
+     */
+    @DeleteMapping("/remove")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long uid) {
+        userService.deleteUser(uid);
+        return ResponseEntity.noContent().build();
     }
 
 

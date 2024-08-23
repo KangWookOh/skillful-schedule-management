@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/schedules/{sid}/replies")
+@RequestMapping("/schedules/{sid}/replies")
 @RequiredArgsConstructor
 @Slf4j
 public class ReplyController {

@@ -6,6 +6,7 @@ import com.sparta.schedulemanagement.Dto.User.UserResponseDto;
 import com.sparta.schedulemanagement.Dto.User.UserTokenResponseDto;
 import com.sparta.schedulemanagement.Service.User.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserServiceImpl userService;
@@ -28,6 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserTokenResponseDto> register(@RequestBody UserRequestDto userRequestDto) {
+        log.info("회원가입: {}", userRequestDto);
         return ResponseEntity.ok(userService.createUser(userRequestDto));
     }
 
@@ -40,6 +43,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody LoginRequestDto loginRequestDto){
         String token = userService.loginUser(loginRequestDto);
+        log.info("로그인 정보: {}", token);
         return ResponseEntity.ok(token);
     }
 
@@ -51,6 +55,7 @@ public class UserController {
      */
     @GetMapping("/{uid}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long uid) {
+        log.info("User: {}",userService.getUserById(uid));
         return ResponseEntity.ok(userService.getUserById(uid));
     }
 
@@ -63,6 +68,7 @@ public class UserController {
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         // 모든 사용자 정보를 조회하고, 응답으로 반환
         List<UserResponseDto> users = userService.getAllUsers();
+        log.info("get All Users: {}", users);
         return ResponseEntity.ok(users);
     }
 
@@ -76,6 +82,8 @@ public class UserController {
      */
     @PutMapping("/update/{uid}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long uid, @RequestBody UserRequestDto userRequestDto) {
+        log.info("updateUser: {}",userRequestDto);
+        log.info("updateInfo: {}", userService.updateUser(uid,userRequestDto));
         return ResponseEntity.ok(userService.updateUser(uid, userRequestDto));
     }
 
@@ -88,6 +96,7 @@ public class UserController {
     @DeleteMapping("/remove")
     public ResponseEntity<Void> deleteUser(@PathVariable Long uid) {
         userService.deleteUser(uid);
+        log.info("deleteUser: {}", uid);
         return ResponseEntity.noContent().build();
     }
 

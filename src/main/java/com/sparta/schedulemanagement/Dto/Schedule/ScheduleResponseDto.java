@@ -18,8 +18,6 @@ public class ScheduleResponseDto {
 
     private String contents;
 
-    private Long userId;
-
     private String userName;
 
     private String email;
@@ -37,7 +35,6 @@ public class ScheduleResponseDto {
         schedule.getSid(),
         schedule.getTitle(),
         schedule.getContents(),
-        schedule.getOwner().getUid(),
         schedule.getOwner().getUserName(),
         schedule.getOwner().getEmail(),
         schedule.getWeather(),

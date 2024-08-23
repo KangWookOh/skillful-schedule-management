@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/schedule")
+@RequestMapping("/schedule")
 @Slf4j
 public class ScheduleController {
 
@@ -29,6 +29,7 @@ public class ScheduleController {
     @PostMapping(value="/register", produces="application/json")
     public ResponseEntity<ScheduleResponseDto> register(@RequestBody ScheduleRequestDto scheduleRequestDto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(scheduleRequestDto);
+        log.info("getRegister : {}", scheduleResponseDto);
         return ResponseEntity.ok().body(scheduleResponseDto);
     }
 
@@ -41,6 +42,7 @@ public class ScheduleController {
     @GetMapping("/{sid}")
     public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long sid){
         Optional<ScheduleResponseDto> schedule = scheduleService.getScheduleById(sid);
+        log.info("getSchedule : {}", schedule);
         return schedule.map(dto -> ResponseEntity.ok().body(dto))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -56,6 +58,7 @@ public class ScheduleController {
     public ResponseEntity<Page<SchedulePageResponseDto>> getSchedules( @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size){
        Page<SchedulePageResponseDto> schedule = scheduleService.getAllSchedules(page,size);
+       log.info("Pagination Schedule : {}", schedule);
        return ResponseEntity.ok().body(schedule);
     }
 
@@ -69,6 +72,7 @@ public class ScheduleController {
     @PutMapping("/update/{sid}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long sid, @RequestBody ScheduleRequestDto scheduleRequestDto){
         ScheduleResponseDto updateSchedule = scheduleService.updateSchedule(sid, scheduleRequestDto);
+        log.info("updateSchedule : {}", updateSchedule);
         return ResponseEntity.ok().body(updateSchedule);
     }
 
@@ -81,6 +85,7 @@ public class ScheduleController {
     @DeleteMapping("/delete/{sid}")
     public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long sid){
        scheduleService.deleteSchedule(sid);
+       log.info("deleteSchedule : {}", sid);
        return ResponseEntity.noContent().build();
     }
 

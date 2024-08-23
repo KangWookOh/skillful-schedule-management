@@ -122,14 +122,15 @@ public class ScheduleServiceImpl implements ScheduleService{
                     .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
             schedule.updateOwner(newOwner);  // 메소드를 통해 업데이트
         }
+        // 기존 담당자 제거
 
         // Schedule 객체의 필드 업데이트
         schedule.updateSchedule(scheduleRequestDto);
-        // 기존 담당자 제거
-        schedule.getAssignees().clear();
+
 
         // 새로운 담당자 추가
         if (scheduleRequestDto.getAssigneeIds() != null) {
+            schedule.getAssignees().clear();
             for (Long assigneeId : scheduleRequestDto.getAssigneeIds()) {
                 User assignee = userRepository.findById(assigneeId)
                         .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));

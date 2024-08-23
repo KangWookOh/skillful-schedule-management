@@ -28,9 +28,8 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<ReplyResponseDto> createReply(@PathVariable Long sid, @RequestBody ReplyRequestDto replyRequestDto){
         ReplyResponseDto createReply = replyService.addReply(sid,replyRequestDto);
-        log.info("sid:"+sid);
-        log.info("create reply: {}",replyRequestDto);
-        return ResponseEntity.ok(createReply);
+        log.info("createReply:{}", createReply);
+        return ResponseEntity.ok().body(createReply);
     }
 
     /**
@@ -42,7 +41,8 @@ public class ReplyController {
     @GetMapping("/{rid}")
     public ResponseEntity<Optional<ReplyResponseDto>> getReplyById(@PathVariable Long rid){
         Optional<ReplyResponseDto> reply = replyService.getReplyById(rid);
-        return ResponseEntity.ok(reply);
+        log.info("getReplyById:{}", reply);
+        return ResponseEntity.ok().body(reply);
     }
 
     /**
@@ -54,7 +54,8 @@ public class ReplyController {
     @GetMapping
     public ResponseEntity<List<ReplyResponseDto>> getAllReply(@PathVariable Long sid){
         List<ReplyResponseDto> replise = replyService.getRepliesByScheduleId(sid);
-        return ResponseEntity.ok(replise);
+        log.info("getAllReply:{}", replise);
+        return ResponseEntity.ok().body(replise);
     }
 
     /**
@@ -70,7 +71,8 @@ public class ReplyController {
                                                         @PathVariable Long rid,
                                                         @RequestBody ReplyRequestDto replyRequestDto){
         ReplyResponseDto updateReply =replyService.updateReply(rid, replyRequestDto);
-        return ResponseEntity.ok(updateReply);
+        log.info("updateReply:{}", updateReply);
+        return ResponseEntity.ok().body(updateReply);
     }
 
     /**
@@ -83,6 +85,7 @@ public class ReplyController {
     @DeleteMapping("delete/{rid}")
     public ResponseEntity<Void> deleteReply(@PathVariable Long rid,@PathVariable Long sid){
         replyService.deleteReply(rid);
+        log.info("deleteReply:{}", rid);
         return ResponseEntity.noContent().build();
     }
 }

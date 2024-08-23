@@ -45,6 +45,7 @@ public class ScheduleResponseDto {
         schedule.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분")),
                 schedule.getAssignees().stream()
                         .map(assignee -> assignee.getUser().getUid())
+                        .distinct()
                         .collect(Collectors.toList()));
     }
 }

@@ -41,7 +41,8 @@ public class ScheduleController {
     @GetMapping("/{sid}")
     public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long sid){
         Optional<ScheduleResponseDto> schedule = scheduleService.getScheduleById(sid);
-        return schedule.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return schedule.map(dto -> ResponseEntity.ok().body(dto))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -55,7 +56,7 @@ public class ScheduleController {
     public ResponseEntity<Page<SchedulePageResponseDto>> getSchedules( @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size){
        Page<SchedulePageResponseDto> schedule = scheduleService.getAllSchedules(page,size);
-       return ResponseEntity.ok(schedule);
+       return ResponseEntity.ok().body(schedule);
     }
 
     /**
@@ -68,7 +69,7 @@ public class ScheduleController {
     @PutMapping("/update/{sid}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long sid, @RequestBody ScheduleRequestDto scheduleRequestDto){
         ScheduleResponseDto updateSchedule = scheduleService.updateSchedule(sid, scheduleRequestDto);
-        return ResponseEntity.ok(updateSchedule);
+        return ResponseEntity.ok().body(updateSchedule);
     }
 
     /**

@@ -33,8 +33,10 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     @Transactional
     public ReplyResponseDto addReply(Long sid, ReplyRequestDto replyRequestDto) {
-        Schedule schedule = scheduleRepository.findById(sid).orElseThrow(()-> new IllegalArgumentException("일정이 없습니다"));
-        User owner = userRepository.findById(replyRequestDto.getOwnerId()).orElseThrow(()->new IllegalArgumentException("유저가 존재하지 않습니다. "));
+        Schedule schedule = scheduleRepository.findById(sid)
+                .orElseThrow(()-> new IllegalArgumentException("일정이 없습니다"));
+        User owner = userRepository.findById(replyRequestDto.getOwnerId())
+                .orElseThrow(()->new IllegalArgumentException("유저가 존재하지 않습니다. "));
         Reply reply = Reply.builder()
                 .comment(replyRequestDto.getComment())
                 .owner(owner)
@@ -55,7 +57,8 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     @Transactional(readOnly = true)
     public Optional<ReplyResponseDto> getReplyById(Long rid) {
-        Reply reply =replyRepository.findById(rid).orElseThrow(()->new IllegalArgumentException("댓글이 없습니다"));
+        Reply reply =replyRepository.findById(rid)
+                .orElseThrow(()->new IllegalArgumentException("댓글이 없습니다"));
         return Optional.of(ReplyResponseDto.from(reply));
     }
 
@@ -66,7 +69,8 @@ public class ReplyServiceImpl implements ReplyService{
      */
     @Override
     public List<ReplyResponseDto> getRepliesByScheduleId(Long sid) {
-        Schedule schedule = scheduleRepository.findById(sid).orElseThrow(()->new IllegalArgumentException("일정을 찾을수 없습니다"));
+        Schedule schedule = scheduleRepository.findById(sid)
+                .orElseThrow(()->new IllegalArgumentException("일정을 찾을수 없습니다"));
 
         return schedule.getReplies().stream()
                 .map(ReplyResponseDto::from)
@@ -82,7 +86,8 @@ public class ReplyServiceImpl implements ReplyService{
      */
     @Override
     public ReplyResponseDto updateReply(Long rid, ReplyRequestDto replyRequestDto) {
-        Reply reply =replyRepository.findById(rid).orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
+        Reply reply =replyRepository.findById(rid)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
         reply.replyUpdate(replyRequestDto);
         return ReplyResponseDto.from(replyRepository.save(reply));
     }
@@ -94,7 +99,8 @@ public class ReplyServiceImpl implements ReplyService{
      */
     @Override
     public void deleteReply(Long rid) {
-        Reply reply = replyRepository.findById(rid).orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
+        Reply reply = replyRepository.findById(rid)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을수 없습니다"));
         replyRepository.delete(reply);
     }
 }

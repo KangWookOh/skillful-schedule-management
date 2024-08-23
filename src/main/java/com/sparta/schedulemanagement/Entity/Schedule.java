@@ -43,10 +43,6 @@ public class Schedule extends BaseTime{
         this.owner = newOwner;
     }
 
-    public void updateAssignees(List<ScheduleAssignee> newAssignees) {
-        this.assignees = newAssignees;
-    }
-
 
     @Builder
     public Schedule(String title, String contents,String weather, User owner) {

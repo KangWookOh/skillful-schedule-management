@@ -24,7 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(JwtUtil.AUTHORIZATION_HEADER);
 
         if(authHeader != null && authHeader.startsWith(JwtUtil.BEARER_PREFIX)) {
-            String token = authHeader.substring(JwtUtil.BEARER_PREFIX.length());
+            String token = authHeader
+                    .substring(JwtUtil.BEARER_PREFIX.length());
             try {
                 // 토큰 유효성 검사
                 if(jwtUtil.validateToken(token)) {
@@ -39,14 +40,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             catch (JwtException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("JWT 인증 실패: " + e.getMessage());
+                response.getWriter()
+                        .write("JWT 인증 실패: " + e.getMessage());
                 return;
 
             }
         }
         else if(!isExcludedPath(request.getRequestURI())){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("토큰이 누락 되었습니다.");
+            response.getWriter()
+                    .write("토큰이 누락 되었습니다.");
             return;
 
         }

@@ -46,7 +46,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Transactional
     @Override
     public ScheduleResponseDto createSchedule(ScheduleRequestDto scheduleRequestDto) {
-        User owner = userRepository.findById(scheduleRequestDto.getOwnerId()).orElseThrow(()->new IllegalArgumentException("사용자가 없습니다"));
+        User owner = userRepository.findById(scheduleRequestDto.getOwnerId())
+                .orElseThrow(()->new IllegalArgumentException("사용자가 없습니다"));
         WeatherResponseDto weather = getWeatherForToday();
         Schedule schedule = Schedule.builder()
                 .title(scheduleRequestDto.getTitle())
@@ -68,17 +69,16 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     /**
      * 일정 ID로 특정 일정을 조회하는 메서드입니다.
-     * 담당자가 없는 경우 일정을 삭제합니다.
+     * 담당자가 없는 경우 일정을 조회 할수 없게 합니다.
      *
      * @param sid 일정 ID
      * @return 조회된 일정의 응답 DTO(Optional)
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<ScheduleResponseDto> getScheduleById(Long sid){
         Schedule schedule = scheduleRepository.findById(sid)
                 .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다"));
-
         if(schedule.getAssignees() == null || schedule.getAssignees().isEmpty()){
             throw new NoSuchElementException("담당자가 비어있어 스케줄을 조회 할수 없습니다.");
         }
@@ -147,7 +147,8 @@ public class ScheduleServiceImpl implements ScheduleService{
          */
         @Override
         public void deleteSchedule (Long sid){
-            Schedule schedule = scheduleRepository.findById(sid).orElseThrow(() -> new IllegalArgumentException("일정을 찾을수 없습니다"));
+            Schedule schedule = scheduleRepository.findById(sid)
+                    .orElseThrow(() -> new IllegalArgumentException("일정을 찾을수 없습니다"));
             scheduleRepository.delete(schedule);
         }
 
@@ -163,7 +164,8 @@ public class ScheduleServiceImpl implements ScheduleService{
             if (response == null || response.length == 0) {
                 throw new RuntimeException("날씨 정보를 가져오는데 실패 했습니다.");
             }
-            String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd"));
+            String today = LocalDate.now()
+                    .format(DateTimeFormatter.ofPattern("MM-dd"));
 
             return Arrays.stream(response)
                     .filter(weather -> today.equals(weather.getDate()))

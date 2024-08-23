@@ -24,9 +24,6 @@ public class UserServiceImpl implements UserService{
     private final JwtUtil jwtUtil;
 
 
-
-
-
     /**
      * 새로운 사용자를 생성하고 JWT 토큰을 반환합니다.
      *
@@ -58,7 +55,8 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public String loginUser(LoginRequestDto loginRequestDto) {
-        User user =userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(()-> new IllegalArgumentException("이메일이 일치 하지 않습니다."));
+        User user =userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(()-> new IllegalArgumentException("이메일이 일치 하지 않습니다."));
         if (!PasswordUtil.checkPassword(loginRequestDto.getPassword(),user.getPassword())){
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
@@ -73,7 +71,8 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public UserResponseDto getUserById(Long uid) {
-        User user = userRepository.findById(uid).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
+        User user = userRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
         return UserResponseDto.from(user);
     }
 
@@ -84,7 +83,9 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserResponseDto :: from).collect(Collectors.toList());
+        return userRepository.findAll().stream()
+                .map(UserResponseDto :: from)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -96,7 +97,8 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public UserResponseDto updateUser(Long uid, UserRequestDto userRequestDto) {
-        User user = userRepository.findById(uid).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
+        User user = userRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다"));
         user.updateUser(userRequestDto);
         return UserResponseDto.from(userRepository.save(user));
     }
@@ -108,7 +110,8 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public void deleteUser(Long uid) {
-        userRepository.findById(uid).orElseThrow(()->new IllegalArgumentException("유저를 찾을 수 없습니다."));
+        userRepository.findById(uid)
+                .orElseThrow(()->new IllegalArgumentException("유저를 찾을 수 없습니다."));
         userRepository.deleteById(uid);
 
     }

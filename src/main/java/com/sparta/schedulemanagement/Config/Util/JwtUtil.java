@@ -59,7 +59,8 @@ public class JwtUtil {
     }
 
     public UserRole getRoleFromToken(String token) {
-        return UserRole.valueOf(parseClaims(token).get(AUTHORIZATION_KEY,String.class));
+        return UserRole.valueOf(parseClaims(token)
+                .get(AUTHORIZATION_KEY,String.class));
     }
 
     public boolean validateToken(String token) {

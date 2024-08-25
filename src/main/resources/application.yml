@@ -1,17 +1,17 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    url: jdbc:mysql://localhost:3306/skillful?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    password: root
+    url: jdbc:mysql://localhost:3306/skillful?useSSL=false&&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${SPRING_DATASOURCE_NAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
-      globally_quoted_identifiers: true
       ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
 
   main:
     allow-bean-definition-overriding: true
@@ -30,4 +30,4 @@ weather:
     url: https://f-api.github.io/f-api/weather.json
 logging:
   level:
-    web: debug
+    root: info

@@ -57,10 +57,9 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ReplyResponseDto> getReply(Long rid) {
-        Reply reply =replyRepository.findById(rid)
-                .orElseThrow(()->new NoSuchElementException("댓글이 없습니다"));
-        return Optional.of(ReplyResponseDto.from(reply));
+    public ReplyResponseDto getReply(Long rid) {
+        Reply reply = replyRepository.findById(rid).orElseThrow(()-> new NoSuchElementException("댓글을 찾을수 없습니다."));
+        return ReplyResponseDto.from(reply);
     }
 
     /**

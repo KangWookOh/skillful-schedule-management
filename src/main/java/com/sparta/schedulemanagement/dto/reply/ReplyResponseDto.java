@@ -31,4 +31,11 @@ public class ReplyResponseDto {
         );
     }
 
+    public ReplyResponseDto(Reply reply) {
+        this.rid = reply.getRid();
+        this.comment = reply.getComment();
+        this.userName = reply.getOwner().getUserName();
+        this.createDate = reply.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.updateDate = reply.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 }

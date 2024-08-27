@@ -14,9 +14,6 @@ public class Reply extends BaseTime{
 
     private String comment;
 
-    private String userName;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id",nullable = false)
     private Schedule schedule;
@@ -30,7 +27,6 @@ public class Reply extends BaseTime{
     public Reply(String comment, String userName, User owner, Schedule schedule) {
         this.comment = comment;
         this.owner = owner;
-        this.userName = userName;
         this.schedule = schedule;
         schedule.getReplies().add(this);
 

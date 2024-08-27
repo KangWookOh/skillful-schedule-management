@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ReplyService {
     ReplyResponseDto addReply(Long sid,ReplyRequestDto replyRequestDto);
-    Optional<ReplyResponseDto> getReply(Long rid);
+    ReplyResponseDto getReply(Long rid);
     List<ReplyResponseDto> getReplies(Long sid);
     ReplyResponseDto updateReply(Long rid,ReplyRequestDto replyRequestDto);
     void deleteReply(Long rid);

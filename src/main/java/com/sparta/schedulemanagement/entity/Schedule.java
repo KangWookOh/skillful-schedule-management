@@ -61,8 +61,6 @@ public class Schedule extends BaseTime{
             user.addAssignedSchedule(assignee);
         }
     }
-
-
     // 댓글 추가 메소드
     public void addReply(Reply reply) {
         replies.add(reply);

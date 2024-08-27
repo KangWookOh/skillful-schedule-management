@@ -58,6 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isExcludedPath(String path) {
-        return path.equals("/api/v1/users/login") || path.equals("/api/v1/users");
+        return "/api/v1/users/login".equalsIgnoreCase(path) || "/api/v1/users".equalsIgnoreCase(path);
     }
 }

@@ -52,8 +52,7 @@ public class ReplyController {
     @GetMapping("/replies/{rid}")
     public ResponseEntity<ApiResponse<ReplyResponseDto>> getReply(@PathVariable long rid){
         try {
-            ReplyResponseDto reply = replyService.getReply(rid)
-                    .orElseThrow(() -> new NoSuchElementException("댓글을 찾을 수 없습니다."));
+            ReplyResponseDto reply = replyService.getReply(rid);
             return ResponseEntity.ok(ApiResponse.success(reply));
         }
         catch (NoSuchElementException e){

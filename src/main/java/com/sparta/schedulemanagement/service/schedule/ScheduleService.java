@@ -13,7 +13,7 @@ import java.util.Set;
 public interface ScheduleService {
      ScheduleResponseDto createSchedule(ScheduleRequestDto scheduleRequestDto);
 
-     Optional<ScheduleResponseDto> getSchedule(Long sid);
+     ScheduleResponseDto getSchedule(Long sid);
 
      Page<SchedulePageResponseDto> getSchedules(int page, int size);
 

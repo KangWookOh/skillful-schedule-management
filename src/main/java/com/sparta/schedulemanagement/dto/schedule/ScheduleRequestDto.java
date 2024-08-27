@@ -27,4 +27,8 @@ public class ScheduleRequestDto {
         this.assigneeIds = assigneeIds;
 
     }
+
+    public ScheduleRequestDto() {
+
+    }
 }

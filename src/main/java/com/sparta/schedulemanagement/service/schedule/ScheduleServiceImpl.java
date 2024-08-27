@@ -31,12 +31,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
-
-
     @Value("${weather.api.url}")
     private String weatherApiUrl;
-
-
     /**
      * 새로운 일정을 생성하는 메서드입니다.
      * 일정의 소유자와 담당자를 추가하고, 현재 날씨 정보를 함께 저장합니다.
@@ -60,9 +56,6 @@ public class ScheduleServiceImpl implements ScheduleService{
         }
         return ScheduleResponseDto.from(scheduleRepository.save(schedule));
     }
-
-
-
     /**
      * 일정 ID로 특정 일정을 조회하는 메서드입니다.
      * 담당자가 없는 경우 일정을 조회 할수 없게 합니다.
@@ -72,15 +65,13 @@ public class ScheduleServiceImpl implements ScheduleService{
      */
     @Transactional(readOnly = true)
     @Override
-    public Optional<ScheduleResponseDto> getSchedule(Long sid){
-        Schedule schedule = scheduleRepository.findById(sid)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다"));
+    public ScheduleResponseDto getSchedule(Long sid){
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(sid);
         if(schedule.getAssignees() == null || schedule.getAssignees().isEmpty()){
             throw new NoSuchElementException("담당자가 비어있어 스케줄을 조회 할수 없습니다.");
         }
-        return Optional.of(ScheduleResponseDto.from(schedule));
+        return ScheduleResponseDto.from(schedule);
     }
-
     /**
      * 모든 일정을 페이지 단위로 조회하는 메서드입니다.
      *
@@ -94,8 +85,6 @@ public class ScheduleServiceImpl implements ScheduleService{
         Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "updateDate"));
         return scheduleRepository.findAll(pageable).map(SchedulePageResponseDto ::from);
     }
-
-
     /**
      * 특정 일정을 수정하는 메서드입니다.
      * 일정의 소유자와 담당자 목록을 업데이트합니다.
@@ -107,25 +96,19 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     @Transactional
     public ScheduleResponseDto updateSchedule(Long sid, ScheduleRequestDto scheduleRequestDto) {
-        Schedule schedule = scheduleRepository.findById(sid)
-                .orElseThrow(() -> new NoSuchElementException("일정을 찾을 수 없습니다."));
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(sid);
         if (scheduleRequestDto.getOwnerId() != null) {
             User newOwner = userRepository.findByIdOrElseThrow(scheduleRequestDto.getOwnerId());
             schedule.updateOwner(newOwner);  // 메소드를 통해 업데이트
         }
         // Schedule 객체의 필드 업데이트
         schedule.updateSchedule(scheduleRequestDto);
-
-
         // 새로운 담당자 추가 // 로직변경
         // 새로운 담당자 추가
         if (scheduleRequestDto.getAssigneeIds() != null) {
             addNewAssignees(schedule, scheduleRequestDto.getAssigneeIds());
         }
-
         return ScheduleResponseDto.from(scheduleRepository.save(schedule));
-
-
     }
 
         /**
@@ -136,8 +119,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         @Override
         @Transactional
         public void deleteSchedule (Long sid){
-            Schedule schedule = scheduleRepository.findById(sid)
-                    .orElseThrow(() -> new NoSuchElementException("일정을 찾을수 없습니다"));
+            Schedule schedule = scheduleRepository.findByIdOrElseThrow(sid);
             scheduleRepository.delete(schedule);
         }
 
@@ -190,8 +172,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         // 새로 추가해야 할 담당자 처리
         for (Long assigneeId : newAssigneeIds) {
-            User assignee = userRepository.findById(assigneeId)
-                    .orElseThrow(() -> new NoSuchElementException("담당자를 찾을 수 없습니다."));
+            User assignee = userRepository.findByIdOrElseThrow(assigneeId);
             schedule.addAssignedUser(assignee);
         }
     }

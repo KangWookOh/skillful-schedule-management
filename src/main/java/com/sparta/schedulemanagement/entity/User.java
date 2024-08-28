@@ -2,12 +2,12 @@ package com.sparta.schedulemanagement.entity;
 
 import com.sparta.schedulemanagement.dto.user.UserRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +20,25 @@ public class User extends BaseTime{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uid;
 
+    @NotBlank
     private String userName;
 
     @NotEmpty(message = "이메일 입력은 필수 입니다.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
     private String email;
 
+    @NotEmpty(message = "비밀번호 입력은 필수 입니다.")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Schedule> ownedSchedules = new ArrayList<>();
+    private List<Schedule> userSchedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScheduleAssignee> assignedSchedules = new ArrayList<>();
+    private List<ScheduleAssignees> scheduleAssignees = new ArrayList<>();
 
     @Builder
     public User(String userName,String email,String password,UserRole role){
@@ -51,11 +54,11 @@ public class User extends BaseTime{
 
     // 연관관계 편의 메서드
     public void addOwnedSchedule(Schedule schedule) {
-        this.ownedSchedules.add(schedule);
+        this.userSchedules.add(schedule);
     }
 
-    public void addAssignedSchedule(ScheduleAssignee scheduleAssignee) {
-        this.assignedSchedules.add(scheduleAssignee);
+    public void addAssignedSchedule(ScheduleAssignees scheduleAssignees) {
+        this.scheduleAssignees.add(scheduleAssignees);
     }
 
 

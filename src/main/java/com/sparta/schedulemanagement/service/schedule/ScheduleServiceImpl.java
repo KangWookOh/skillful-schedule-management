@@ -5,7 +5,7 @@ import com.sparta.schedulemanagement.dto.schedule.ScheduleRequestDto;
 import com.sparta.schedulemanagement.dto.schedule.ScheduleResponseDto;
 import com.sparta.schedulemanagement.dto.schedule.WeatherResponseDto;
 import com.sparta.schedulemanagement.entity.Schedule;
-import com.sparta.schedulemanagement.entity.ScheduleAssignee;
+import com.sparta.schedulemanagement.entity.ScheduleAssignees;
 import com.sparta.schedulemanagement.entity.User;
 import com.sparta.schedulemanagement.repository.ScheduleRepository;
 import com.sparta.schedulemanagement.repository.UserRepository;
@@ -68,7 +68,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     public ScheduleResponseDto getSchedule(Long sid){
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(sid);
         if(schedule.getAssignees() == null || schedule.getAssignees().isEmpty()){
-            throw new NoSuchElementException("담당자가 비어있어 스케줄을 조회 할수 없습니다.");
+            throw new IllegalStateException("담당자가 비어있어 스케줄을 조회 할수 없습니다.");
         }
         return ScheduleResponseDto.from(schedule);
     }
@@ -133,7 +133,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         public WeatherResponseDto getWeatherForToday () {
             WeatherResponseDto[] response = restTemplate.getForObject(weatherApiUrl, WeatherResponseDto[].class);
             if (response == null || response.length == 0) {
-                throw new IllegalArgumentException("날씨 정보를 가져오는데 실패 했습니다.");
+                throw new IllegalStateException("날씨 정보를 가져오는데 실패 했습니다.");
             }
             String today = LocalDate.now()
                     .format(DateTimeFormatter.ofPattern("MM-dd"));
@@ -163,7 +163,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         newAssigneeIds.removeAll(currentAssigneeIds);
 
         // 삭제해야 할 담당자
-        Set<ScheduleAssignee> toRemove = schedule.getAssignees().stream()
+        Set<ScheduleAssignees> toRemove = schedule.getAssignees().stream()
                 .filter(assignee -> !assigneeIds.contains(assignee.getUser().getUid()))
                 .collect(Collectors.toSet());
 

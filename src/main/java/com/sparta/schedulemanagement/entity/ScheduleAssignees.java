@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ScheduleAssignee {
+public class ScheduleAssignees {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class ScheduleAssignee {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    public ScheduleAssignee(User user, Schedule schedule) {
+    public ScheduleAssignees(User user, Schedule schedule) {
         this.user = user;
         this.schedule = schedule;
     }

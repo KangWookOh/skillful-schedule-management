@@ -30,7 +30,7 @@ public class Schedule extends BaseTime{
     private User owner;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScheduleAssignee> assignees = new ArrayList<>();
+    private List<ScheduleAssignees> assignees = new ArrayList<>();
 
 
     public void updateSchedule(ScheduleRequestDto scheduleRequestDto) {
@@ -55,9 +55,9 @@ public class Schedule extends BaseTime{
 
     // 연관관계 편의 메서드
     public void addAssignedUser(User user) {
-        ScheduleAssignee assignee = new ScheduleAssignee(user, this);
+        ScheduleAssignees assignee = new ScheduleAssignees(user, this);
         this.assignees.add(assignee);
-        if (!user.getAssignedSchedules().contains(assignee)) {
+        if (!user.getScheduleAssignees().contains(assignee)) {
             user.addAssignedSchedule(assignee);
         }
     }

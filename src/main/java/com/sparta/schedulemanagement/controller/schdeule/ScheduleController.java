@@ -52,7 +52,7 @@ public class ScheduleController {
      */
     @GetMapping("/v1/schedules/{sid}")
     public ResponseEntity<ApiResponse<ScheduleResponseDto>> getSchedule(@PathVariable Long sid){
-        Optional<ScheduleResponseDto> schedule = scheduleService.getSchedule(sid);
+        Optional<ScheduleResponseDto> schedule = Optional.ofNullable(scheduleService.getSchedule(sid));
         return schedule.map(dto -> {
             LoggerUtil.logInfo("getSchedule", dto);
             return ResponseEntity.ok(ApiResponse.success(dto));

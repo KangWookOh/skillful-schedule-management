@@ -38,11 +38,12 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException("사용중인 이메일 입니다.");
         }
         String password = PasswordUtils.hashPassword(userRequestDto.getPassword());
+        UserRole role = userRequestDto.getUserRole() != null ? userRequestDto.getUserRole() : UserRole.USER;
         User user = User.builder()
                 .userName(userRequestDto.getUserName())
                 .email(userRequestDto.getEmail())
                 .password(password)
-                .role(UserRole.USER)
+                .role(role)
                 .build();
         userRepository.save(user);
         String token = jwtUtils.generateToken(user.getUserName(), user.getRole());

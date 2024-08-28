@@ -53,6 +53,7 @@ public class Schedule extends BaseTime{
         owner.addOwnedSchedule(this);
     }
 
+
     // 연관관계 편의 메서드
     public void addAssignedUser(User user) {
         ScheduleAssignees assignee = new ScheduleAssignees(user, this);

@@ -15,7 +15,6 @@ public class FilterConfig {
         this.jwtUtils = jwtUtils;
     }
 
-
     @Bean
     public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthenticationFilter() {
         FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();

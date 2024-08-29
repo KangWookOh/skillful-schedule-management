@@ -166,10 +166,8 @@ public class ScheduleServiceImpl implements ScheduleService{
         Set<ScheduleAssignees> toRemove = schedule.getAssignees().stream()
                 .filter(assignee -> !assigneeIds.contains(assignee.getUser().getUid()))
                 .collect(Collectors.toSet());
-
         // 삭제 처리
         schedule.getAssignees().removeAll(toRemove);
-
         // 새로 추가해야 할 담당자 처리
         for (Long assigneeId : newAssigneeIds) {
             User assignee = userRepository.findByIdOrElseThrow(assigneeId);

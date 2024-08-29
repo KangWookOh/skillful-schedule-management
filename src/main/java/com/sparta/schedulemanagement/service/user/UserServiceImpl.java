@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-
-
     /**
      * 새로운 사용자를 생성하고 JWT 토큰을 반환합니다.
      *
@@ -66,7 +64,6 @@ public class UserServiceImpl implements UserService{
         }
         return jwtUtils.generateToken(user.getEmail(),user.getRole());
     }
-
     /**
      * ID로 특정 사용자를 조회합니다.
      *

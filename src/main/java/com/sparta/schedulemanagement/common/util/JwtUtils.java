@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -25,7 +23,7 @@ public class JwtUtils {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
-    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final long TOKEN_TIME = 60 * 60 * 1000000L; // 6000분
 
     @Value("${jwt.secret.key}")// Base64 Encode 한 SecretKey
     private  String SECRET_KEY;
@@ -46,6 +44,7 @@ public class JwtUtils {
                 .setSubject(email)
                 .claim(AUTHORIZATION_KEY, role.name())
                 .setIssuedAt(now)
+
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(SignatureAlgorithm.HS256, getSecretKey())
                 .compact();
@@ -79,6 +78,7 @@ public class JwtUtils {
     private Claims parseClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
+                .setAllowedClockSkewSeconds(60)
                 .parseClaimsJws(token.replace(BEARER_PREFIX, ""))
                 .getBody();
     }
